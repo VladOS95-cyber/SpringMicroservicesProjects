@@ -9,9 +9,24 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5430:5432"
+      - "5432:5432"
     networks:
       - postgres
+    restart: unless-stopped
+
+  postgres-fraud:
+    container_name: postgres-fraud
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres-fraud
+    volumes:
+      - postgres-fraud:/data/postgres-fraud
+    ports:
+      - "5431:5432"
+    networks:
+      - postgres-fraud
     restart: unless-stopped
 
   pgadmin:
@@ -27,12 +42,16 @@ services:
       - "5050:80"
     networks:
       - postgres
+      - postgres-fraud
     restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
+  postgres-fraud:
+    driver: bridge
 
 volumes:
   postgres:
+  postgres-fraud:
   pgadmin:
